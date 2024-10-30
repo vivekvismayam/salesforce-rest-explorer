@@ -1,0 +1,64 @@
+{
+  "name": "salesforce-rest-explorer",
+  "displayName": "Salesforce Rest Explorer",
+  "description": "Extension to explore Salesforce Rest APIs",
+  "version": "0.0.8",
+  "publisher": "vivekvismayam",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "Salesforce",
+    "REST",
+    "API",
+    "Callout",
+    "Integration"
+  ],
+  "icon": "./icon.png",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "salesforce-rest-explorer.openRestExplorer",
+        "title": "Open Salesforce Rest Explorer"
+      }
+    ],
+    "configuration": {
+      "title": "Salesforce Rest Explorer",
+      "properties": {
+        "salesforce-rest-explorer.CLI Command": {
+          "type": "string",
+          "enum": [
+            "sf",
+            "sfdx"
+          ],
+          "enumItemLabels": [
+            "sf",
+            "sfdx"
+          ],
+          "default": "sf",
+          "description": "Select the Salesforce CLI Command you use in your system"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.9",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.80.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.13.0"
+  },
+  "dependencies": {
+  }
+}

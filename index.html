@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salesforce Rest Explorer</title>
+</head>
+
+<body>
+    <div id="loader" class="loader-ctr">
+        <span class="loader"></span>
+    </div>
+
+    <div class="main-container">
+        <div class="main-title">SALESFORCE REST EXPLORER</div>
+        <div class="env-details">
+            <span>
+                <div style="text-align: end;"><button id="refresh-org" class="refresh-org"
+                        title="Click if you want to hit Project default org">Set Default Org</button>
+                </div>
+                <div id="username">
+
+                </div>
+                <div id="orgurl">
+
+                </div>
+            </span>
+        </div>
+
+        <div class="info">Click Send to perform REST API Callout </div>
+        <div class="execute">
+            <span class="method-endpoint">
+                <span class="httpMethod">
+                    <select name="httpMethod" id="httpMethod">
+                        <option value="GET" style="color:#70ca5c;">GET</option>
+                        <option value="POST" style="color:#d9bc00;">POST</option>
+                        <option value="PUT" style="color:#1f90f9;">PUT</option>
+                        <option value="PATCH" style="color:#b42aff;">PATCH</option>
+                        <option value="DELETE" style="color:#ff772d;">DELETE</option>
+                        <option value="HEAD" style="color:#1ea001;">HEAD</option>
+                    </select>
+                </span>
+                <span class="endpoint">
+                    <input type="text" id="url" value="/services/data/v60.0">
+                </span>
+            </span>
+            <span class="send"><button id="send">Send</button></span>
+        </div>
+        <div class="request">
+            <button class="accordion">Request Headers <span style="float:right;">+<span></span></button>
+            <div class="panel">
+                <div class="headers">
+                    <div class="title">Request Headers (Enter each header as key value pair in each line with in double
+                        quotes.Eg "key1":"value1")</div>
+                    <textarea id="req-headers">"Content-Type": "application/json; charset=UTF-8"
+"Accept": "application/json"</textarea>
+                </div>
+            </div>
+            <button class="accordion">Request Body <span style="float:right;">+<span></span></button>
+            <div class="panel enableheight">
+                <div class="body">
+                    <div class="title">Request Body</div>
+                    <textarea id="req-body"></textarea>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="line">
+        </div>
+        <div id="response-section" class="response-section hidden">
+            <div class="response-title"> Response</div>
+
+            <div class="response-items">
+                <span id="status-code" class="status-code">--</span>
+                <span id="time" class="time">--</span>
+                <span id="size" class="size">--</span>
+
+            </div>
+            <div class="res-body-cntr">
+                <div class="res-title">Response Body
+                    <div class="actions">
+                        <span><a href="#resheader" title="Click to see Response Headers">Scroll To Headers</a>
+                        </span>
+                        <span onclick="copyResponse()">
+                            <a title="Click to copy Response Body to Clipboard">Copy Response</a>
+                        </span></div>
+                </div>
+                <div class="res-body-sub-cntr">
+                    <div class="res-body" id="resbody">
+                    </div>
+                </div>
+                <div class="line"></div>
+
+                <div class="res-title">Response Headers</div>
+                <div class="res-body-sub-cntr padding-top">
+                    <div class="res-body" id="resheader">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <style>
+        .main-title {
+            text-align: center;
+            color: var(--vscode-editorInfo-foreground, #4e94ce);
+            font-size: xx-large;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-weight: bold;
+            padding: 2% 2% 0% 2%;
+        }
+
+        .env-details {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .env-details>span {
+            padding: 0.5%;
+            border: 0.5px solid var(--vscode-editorInfo-foreground, #4e94ce);
+            color: var(--vscode-editorInfo-foreground, #4e94ce);
+            border-radius: 3px;
+            font-size: small;
+        }
+
+        .env-details>span>div {
+            padding: 0.25%;
+            text-wrap-mode: nowrap;
+        }
+
+        button.refresh-org {
+            background-color: #0563d3;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            font-size: x-small;
+            padding: 2%;
+        }
+
+        button.refresh-org:hover {
+            background-color: #0053b8
+        }
+
+        .info {
+            text-align: center;
+            font-size: small;
+        }
+
+        .execute {
+            padding: 1%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .execute * {
+            font-size: large;
+        }
+
+        .method-endpoint {
+            padding: 1% 1% 1% 0;
+            border: 1px solid rgb(94, 94, 94);
+            border-radius: 3px;
+            display: flex;
+            width: 60%;
+        }
+
+        .method-endpoint * {
+            border: none;
+        }
+
+        select#httpMethod:focus-visible,
+        .endpoint>input:focus-visible {
+            outline: none;
+        }
+
+        select#httpMethod {
+            height: 100%;
+            width: 100%;
+            background-color: var(--vscode-editor-background);
+            color: var(--vscode-editor-color);
+        }
+
+        .endpoint {
+            width: -webkit-fill-available;
+            padding: 0% 1%;
+        }
+
+        .endpoint>input {
+            width: 100%;
+            padding: 0 1%;
+            background-color: var(--vscode-editor-background);
+            color: var(--vscode-editor-color);
+        }
+
+        .send {
+            padding: 0% 1%;
+        }
+
+        .send>button {
+            height: 100%;
+            padding: 0% 50%;
+            background-color: #0563d3;
+            border: none;
+            border-radius: 3px;
+            color: white
+        }
+
+        .send>button:hover {
+            background-color: #0053b8
+        }
+
+        .request {
+            padding: 1%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 50px;
+            background-color: var(--vscode-editor-background);
+            color: var(--vscode-editor-color);
+        }
+
+        textarea#body {
+            height: 100px;
+        }
+
+        /* Style the buttons that are used to open and close the accordion panel */
+        .accordion {
+            background-color: var(--vscode-editorStickyScrollHover-background, grey);
+            color: var(--vscode-editor-color);
+            cursor: pointer;
+            padding: 0.5% 1%;
+            width: 70%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.4s;
+            border: 0.5px solid var(--vscode-editorStickyScrollHover-background);
+            border-radius: 30px;
+            margin: 0.55%;
+        }
+
+        /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+        .active,
+        .accordion:hover {
+            background-color: var(--vscode-editorStickyScroll-background, grey);
+        }
+
+        /* Style the accordion panel. Note: hidden by default */
+        .panel {
+            padding: 0 18px;
+            /*  background-color: white;
+   display: none;*/
+            height: 0px;
+            overflow: hidden;
+            transition: 1s;
+            opacity: 0;
+        }
+
+        .enableheight {
+            height: auto;
+            opacity: 100;
+        }
+
+        /*Spinner start*/
+        .loader-ctr {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            background-color: var(--vscode-editor-hoverHighlightBackground, rgba(38, 79, 120, 0.25));
+        }
+/*
+        .loader {
+            position: relative;
+            width: 55px;
+            height: 55px;
+            background-repeat: no-repeat;
+            background-image: linear-gradient(var(--vscode-textLink-foreground, #4daafc) 50px, transparent 0),
+                linear-gradient(var(--vscode-textLink-foreground, #4daafc) 50px, transparent 0),
+                linear-gradient(var(--vscode-textLink-foreground, #4daafc) 50px, transparent 0),
+                linear-gradient(var(--vscode-textLink-foreground, #4daafc) 50px, transparent 0),
+                linear-gradient(var(--vscode-textLink-foreground, #4daafc) 50px, transparent 0),
+                linear-gradient(var(--vscode-textLink-foreground, #4daafc) 50px, transparent 0);
+            background-size: 5px 40px;
+            background-position: 0px center, 10px center, 20px center, 30px center, 40px center, 50px center;
+            animation: spikeUp 1s linear infinite alternate;
+        }
+
+        @keyframes spikeUp {
+            0% {
+                background-size: 5px 40px
+            }
+
+            16% {
+                background-size: 5px 55px, 5px 40px, 5px 40px, 5px 40px, 5px 40px, 5px 40px
+            }
+
+            33% {
+                background-size: 5px 40px, 5px 55px, 5px 40px, 5px 40px, 5px 40px, 5px 40px
+            }
+
+            50% {
+                background-size: 5px 40px, 5px 40px, 5px 55px, 5px 40px, 5px 40px, 5px 40px
+            }
+
+            66% {
+                background-size: 5px 40px, 5px 40px, 5px 40px, 5px 55px, 5px 40px, 5px 40px
+            }
+
+            83% {
+                background-size: 5px 40px, 5px 40px, 5px 40px, 5px 40px, 5px 55px, 5px 40px
+            }
+
+            100% {
+                background-size: 5px 40px, 5px 40px, 5px 40px, 5px 40px, 5px 40px, 5px 55px
+            }
+        }
+*/
+.loader {
+    width: 32px;
+    height: 90px;
+    display: block;
+    margin: 20px auto;
+    position: relative;
+    border-radius: 50% 50% 0 0;
+    border-bottom: 10px solid #FF3D00;
+    background-color: #FFF;
+    background-image: radial-gradient(ellipse at center, #FFF 34%, #FF3D00 35%, #FF3D00 54%, #FFF 55%), linear-gradient(#FF3D00 10px, transparent 0);
+    background-size: 28px 28px;
+    background-position: center 20px , center 2px;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    animation: animloaderBack 1s linear infinite alternate;
+  }
+  .loader::before {
+    content: '';  
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 44px;
+    border-radius: 50%;
+    box-shadow: 0px 15px #FF3D00 inset;
+    top: 67px;
+  }
+  .loader::after {
+    content: '';  
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 34px;
+    height: 34px;
+    top: 112%;
+    background: radial-gradient(ellipse at center, #ffdf00 8%, rgba(249, 62, 0, 0.6) 24%, rgba(0, 0, 0, 0) 100%);
+    border-radius: 50% 50% 0;
+    background-repeat: no-repeat;
+    background-position: -44px -44px;
+    background-size: 100px 100px;
+    box-shadow: 4px 4px 12px 0px rgba(255, 61, 0, 0.5);
+    box-sizing: border-box;
+    animation: animloader 1s linear infinite alternate;
+  }
+  
+  @keyframes animloaderBack {
+    0%, 30%, 70% {
+      transform: translateY(0px);
+    }
+    20%, 40%, 100% {
+      transform: translateY(-5px);
+    }
+  }
+  
+  @keyframes animloader {
+    0% {
+      box-shadow: 4px 4px 12px 2px rgba(255, 61, 0, 0.75);
+      width: 34px;
+      height: 34px;
+      background-position: -44px -44px;
+      background-size: 100px 100px;
+    }
+    100% {
+      box-shadow: 2px 2px 8px 0px rgba(255, 61, 0, 0.5);
+      width: 30px;
+      height: 28px;
+      background-position: -36px -36px;
+      background-size: 80px 80px;
+    }
+  }
+        /*Spinner end*/
+
+        div.line {
+            border: 0.25px solid var(--vscode-editorStickyScrollHover-background, black);
+        }
+
+        .response-title {
+            padding: 1%;
+        }
+
+        .response-items {
+            text-align: center;
+            display: flex;
+            justify-content: space-evenly;
+            border: 0.5px solid var(--vscode-editorStickyScrollHover-background, black);
+            padding: 1%;
+
+        }
+
+        .response-items>* {
+            padding: 0.5%;
+            background-color: #0563d3;
+            border-radius: 3px;
+        }
+
+        .response-section {
+            text-align: center;
+        }
+
+        .res-body-cntr {
+            padding: 1%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .res-title{
+           font-size: medium;
+        }
+        .actions>span {
+            font-size: small;
+            padding: 1%;
+        }
+        .res-body-sub-cntr {
+            display: flex;
+            justify-content: center;
+        }
+
+        .res-body {
+            width: fit-content;
+            min-width: 70%;
+            overflow: scroll;
+            resize: auto;
+            min-height: fit-content;
+            text-align: left;
+            border: 1px solid var(--vscode-textBlockQuote-border, grey);
+            padding: 1%;
+            font-size: large;
+        }
+
+        .padding-top {
+            padding-top: 1%
+        }
+
+        .hidden {
+            /*display: none;*/
+            visibility: hidden;;
+        }
+    </style>
+    <script>
+        /*Pass message to extension*/
+        const vscode = acquireVsCodeApi();
+        var instanceUrl;
+        var loader;
+        var responseBody;
+        //on load
+        document.addEventListener("DOMContentLoaded", function () {
+            loader = document.getElementById('loader');
+            refreshData();
+
+            //on button click refresh
+            const refreshOrgBtn = document.getElementById('refresh-org');
+            refreshOrgBtn?.addEventListener("click", () => {
+                refreshData();
+            });
+
+            //On Send Request
+
+            const sendBtn = document.getElementById('send');
+            sendBtn?.addEventListener("click", () => {
+                sendRequest();
+            });
+        });
+
+        function refreshData() {
+            //Show Spinner
+            loader.style.display = 'flex';
+            vscode.postMessage({
+                command: 'refresh',
+                text: 'refresh'
+            })
+        }
+
+
+        // Handle the message inside the webview
+        window.addEventListener('message', event => {
+            const message = event.data; // The JSON data our extension sent
+            console.log(message?.result)
+            if (message?.command == 'refresh') {
+                const username = document.getElementById('username');
+                username.textContent = message?.result?.username || 'No Default org Selected';
+                const orgurl = document.getElementById('orgurl');
+                orgurl.textContent = message?.result?.instanceUrl || '';
+                instanceUrl = message?.result?.instanceUrl || '';
+                const responseSection = document.getElementById('response-section');
+                responseSection?.classList.add("hidden");
+            } else if (message?.command == 'calloutresponse') {
+                const responseSection = document.getElementById('response-section');
+                responseSection?.classList.remove("hidden");
+                const resbody = document.getElementById('resbody');
+                responseBody = JSON.stringify(message?.result?.body, null, '  ');
+                //resbody.innerHTML = message?.result?.body?`<pre>${JSON.stringify(message?.result?.body, null, '  ')}</pre>`: '';
+                resbody.innerHTML = formatResponse(message?.result?.body);
+                const resheader = document.getElementById('resheader');
+                resheader.innerHTML = message?.result?.headers?`<pre>${JSON.stringify(message?.result?.headers, null, '  ')}</pre>`:'';
+                const stsCode = document.getElementById('status-code');
+                stsCode.textContent = message?.result?.status + ' ' + message?.result?.statusText || '--';
+                if (message?.result?.status>=200&&message?.result?.status<=299) {
+                    stsCode.style?.setProperty('background-color', 'green');
+                }else if(message?.result?.status>=100&&message?.result?.status<=199) {
+                    stsCode.style?.setProperty('background-color', '#0563d3');
+                }
+                else {
+                    stsCode.style?.setProperty('background-color', 'red');
+                }
+                const timeTaken = document.getElementById('time');
+                timeTaken.textContent = message?.result?.time + 'ms' || '--';
+                const size = document.getElementById('size');
+                size.textContent = message?.result?.size + ' bytes' || '--';
+            }
+            loader.style.display = 'none';
+        });
+        //Accordian controller
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                panel.classList.toggle('enableheight');
+            });
+        }
+        async function sendRequest() {
+            loader.style.display = 'flex';
+            const responseSection = document.getElementById('response-section');
+            responseSection?.classList.add("hidden");
+            let endpoint = instanceUrl + document.getElementById('url')?.value;
+            let method = document.getElementById('httpMethod').value;
+            let body = ''
+            try {
+                let bdyStr = document.getElementById('req-body').value;
+                if (!['GET', 'HEAD'].includes(method) && bdyStr) {
+                    body = JSON.parse(bdyStr);
+                }
+            } catch (e) {
+                postError('Body is not a valid JSON');
+                loader.style.display = 'none';
+                return;
+            }
+            let headers = '';
+            try {
+                let hdrStr = document.getElementById('req-headers').value?.trim().replaceAll('\n', ',');
+                headers = JSON.parse(`{${hdrStr}}`);
+            } catch (e) {
+                postError('Header not in expected format');
+                loader.style.display = 'none';
+                return;
+            }
+            let details = { endpoint: endpoint, method: method, body: body, headers: headers }
+            vscode.postMessage({
+                command: 'callout',
+                details: details
+            })
+            //loader.style.display = 'none';
+        }
+        function postError(error) {
+            vscode.postMessage({
+                command: 'error',
+                text: error
+            })
+        }
+        function copyResponse(){
+            navigator.clipboard.writeText(responseBody);
+            vscode.postMessage({
+                command: 'message',
+                text: 'Salesforce Rest Explorer : Copied Response'
+            })
+        }
+        function formatResponse(body){
+            if(body){
+                let jsonBody=JSON.stringify(body,null,'  ');
+                while(jsonBody.match(/"\/services\/data[^"]*/)==null?false:jsonBody.match(/"\/services\/data[^"]*/)){
+                    let s=jsonBody.match(/"\/services\/data[^"]*/)[0];
+                    jsonBody=jsonBody.replace(s,`"<a href="#" title="click to add this as next endpoint" onclick="addEndPoint(this)">${s.replace('"','')}</a>`)
+                }
+                return `<pre>${jsonBody}</pre>`;
+            }else{
+                return '';
+            }
+            
+        }
+        function addEndPoint(ele){
+            const urlEndpoint = document.getElementById('url');
+            urlEndpoint.value =ele?.innerText||'';
+            const responseSection = document.getElementById('response-section');
+            responseSection?.classList.add("hidden");
+        }
+
+    </script>
+</body>
+
+</html>

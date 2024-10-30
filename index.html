@@ -557,6 +557,11 @@
             let endpoint = instanceUrl + document.getElementById('url')?.value;
             let method = document.getElementById('httpMethod').value;
             let body = ''
+            if(!instanceUrl){
+                postError('Please select a default org for Callout');
+                loader.style.display = 'none';
+                return;
+            }
             try {
                 let bdyStr = document.getElementById('req-body').value;
                 if (!['GET', 'HEAD'].includes(method) && bdyStr) {

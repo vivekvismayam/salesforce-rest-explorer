@@ -59,7 +59,13 @@ function activate(context) {
 									console.log(result)
 									apiKey = result?.result?.accessToken;
 									panel?.webview?.postMessage({ result: { instanceUrl: result?.result?.instanceUrl, username: result?.result?.username }, command: 'refresh' });
-									vscode.window.showInformationMessage('Salesforce Rest Explorer : Org Set to Default org');
+									if(apiKey){
+										vscode.window.showInformationMessage('Salesforce Rest Explorer : Org Set to Default org');
+									}else{
+										vscode.window.showInformationMessage('Salesforce Rest Explorer : Please select a Default org and click on "Set Default Org" Button');
+
+									}
+									
 								}
 							})
 							return;

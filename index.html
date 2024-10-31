@@ -32,7 +32,7 @@
         <div class="execute">
             <span class="method-endpoint">
                 <span class="httpMethod">
-                    <select name="httpMethod" id="httpMethod">
+                    <select name="httpMethod" id="httpMethod" onchange="this.dataset.chosen = this.value;" data-chosen="GET">
                         <option value="GET" style="color:#70ca5c;">GET</option>
                         <option value="POST" style="color:#d9bc00;">POST</option>
                         <option value="PUT" style="color:#1f90f9;">PUT</option>
@@ -181,6 +181,24 @@
             background-color: var(--vscode-editor-background);
             color: var(--vscode-editor-color);
         }
+        select#httpMethod[data-chosen='GET'] { 
+            color:#70ca5c;
+            }
+            select#httpMethod[data-chosen='POST'] { 
+            color:#d9bc00;
+            }
+            select#httpMethod[data-chosen='PUT'] { 
+            color:#1f90f9;
+            }
+            select#httpMethod[data-chosen='PATCH'] { 
+            color:#b42aff;
+            }
+            select#httpMethod[data-chosen='DELETE'] { 
+            color:#ff772d;
+            }
+            select#httpMethod[data-chosen='HEAD'] { 
+            color:#1ea001;
+            }
 
         .endpoint {
             width: -webkit-fill-available;

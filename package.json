@@ -2,7 +2,7 @@
   "name": "salesforce-rest-explorer",
   "displayName": "Salesforce Rest Explorer",
   "description": "Extension to explore Salesforce Rest APIs",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "publisher": "vivekvismayam",
   "categories": [
     "Other"

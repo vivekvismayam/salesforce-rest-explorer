@@ -11,7 +11,8 @@ This extension provides a User Interface to perform REST API Callouts to Salesfo
 - View Response Time
 - Click on 'Copy Response' to copy entire response body
 - Click on 'Scroll To Headers' to easily access Response Headers
-- Select Salesforce Service Endpoints from responses to hit them
+- Format Response Body To Hyperlink Salesforce Endpoints and click hyperlink to use it as next endpoint
+- Turn off 'Format Response Body To Hyperlink Salesforce Endpoints' for faster display of reponses
 
 ## Requirements
 
@@ -35,8 +36,5 @@ Please do report your issues in email vivekvismayam@hotmail.com.
 
 ## Release Notes
 
-
-### 1.0.0
-
-Initial release
-
+### 1.0.2 -Bug Fix
+- Bug fix done for SF Rest explorer to open even when the error apprears :::(node:2656) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead

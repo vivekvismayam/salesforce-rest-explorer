@@ -54,7 +54,8 @@ function activate(context) {
 									console.log(stderr)
 									vscode.window.showErrorMessage(stderr);
 								}
-								else {
+								//else {
+								if(stdout){
 									const result = JSON.parse(stdout);
 									//post details here
 									console.log(result)

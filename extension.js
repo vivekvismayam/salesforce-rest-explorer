@@ -29,7 +29,8 @@ function activate(context) {
 				vscode.ViewColumn.One, // Editor column to show the new webview panel in.
 				{
 					// Enable scripts in the webview
-					enableScripts: true
+					enableScripts: true,
+					enableFindWidget:true
 				}
 			);
 			const pathToHtml = vscode.Uri.file(

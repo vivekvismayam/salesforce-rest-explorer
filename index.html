@@ -32,7 +32,8 @@
         <div class="execute">
             <span class="method-endpoint">
                 <span class="httpMethod">
-                    <select name="httpMethod" id="httpMethod" onchange="this.dataset.chosen = this.value;" data-chosen="GET">
+                    <select name="httpMethod" id="httpMethod" onchange="this.dataset.chosen = this.value;"
+                        data-chosen="GET">
                         <option value="GET" style="color:#70ca5c;">GET</option>
                         <option value="POST" style="color:#d9bc00;">POST</option>
                         <option value="PUT" style="color:#1f90f9;">PUT</option>
@@ -64,8 +65,14 @@
                     <textarea id="req-body"></textarea>
                 </div>
             </div>
-
-
+            <div style="text-align: end;" title="Turn on to show all salesforce endpoints(/services/data...) as clickable hyperlinks[Affects Performance]">
+                <span style="font-size: small;opacity: 70%;cursor:pointer">Format Response Body To Hyperlink Salesforce Endpoints</span>
+                <!-- Toggle switch -->
+                <label class="switch">
+                    <input type="checkbox" checked id="formatCheckbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
         </div>
         <div class="line">
         </div>
@@ -85,7 +92,8 @@
                         </span>
                         <span onclick="copyResponse()">
                             <a title="Click to copy Response Body to Clipboard">Copy Response</a>
-                        </span></div>
+                        </span>
+                    </div>
                 </div>
                 <div class="res-body-sub-cntr">
                     <div class="res-body" id="resbody">
@@ -181,24 +189,30 @@
             background-color: var(--vscode-editor-background);
             color: var(--vscode-editor-color);
         }
-        select#httpMethod[data-chosen='GET'] { 
-            color:#70ca5c;
-            }
-            select#httpMethod[data-chosen='POST'] { 
-            color:#d9bc00;
-            }
-            select#httpMethod[data-chosen='PUT'] { 
-            color:#1f90f9;
-            }
-            select#httpMethod[data-chosen='PATCH'] { 
-            color:#b42aff;
-            }
-            select#httpMethod[data-chosen='DELETE'] { 
-            color:#ff772d;
-            }
-            select#httpMethod[data-chosen='HEAD'] { 
-            color:#1ea001;
-            }
+
+        select#httpMethod[data-chosen='GET'] {
+            color: #70ca5c;
+        }
+
+        select#httpMethod[data-chosen='POST'] {
+            color: #d9bc00;
+        }
+
+        select#httpMethod[data-chosen='PUT'] {
+            color: #1f90f9;
+        }
+
+        select#httpMethod[data-chosen='PATCH'] {
+            color: #b42aff;
+        }
+
+        select#httpMethod[data-chosen='DELETE'] {
+            color: #ff772d;
+        }
+
+        select#httpMethod[data-chosen='HEAD'] {
+            color: #1ea001;
+        }
 
         .endpoint {
             width: -webkit-fill-available;
@@ -298,124 +312,88 @@
             z-index: 10;
             background-color: var(--vscode-editor-hoverHighlightBackground, rgba(38, 79, 120, 0.25));
         }
-/*
+
         .loader {
+            width: 32px;
+            height: 90px;
+            display: block;
+            margin: 20px auto;
             position: relative;
-            width: 55px;
-            height: 55px;
+            border-radius: 50% 50% 0 0;
+            border-bottom: 10px solid #FF3D00;
+            background-color: #FFF;
+            background-image: radial-gradient(ellipse at center, #FFF 34%, #FF3D00 35%, #FF3D00 54%, #FFF 55%), linear-gradient(#FF3D00 10px, transparent 0);
+            background-size: 28px 28px;
+            background-position: center 20px, center 2px;
             background-repeat: no-repeat;
-            background-image: linear-gradient(var(--vscode-textLink-foreground, #4daafc) 50px, transparent 0),
-                linear-gradient(var(--vscode-textLink-foreground, #4daafc) 50px, transparent 0),
-                linear-gradient(var(--vscode-textLink-foreground, #4daafc) 50px, transparent 0),
-                linear-gradient(var(--vscode-textLink-foreground, #4daafc) 50px, transparent 0),
-                linear-gradient(var(--vscode-textLink-foreground, #4daafc) 50px, transparent 0),
-                linear-gradient(var(--vscode-textLink-foreground, #4daafc) 50px, transparent 0);
-            background-size: 5px 40px;
-            background-position: 0px center, 10px center, 20px center, 30px center, 40px center, 50px center;
-            animation: spikeUp 1s linear infinite alternate;
+            box-sizing: border-box;
+            animation: animloaderBack 1s linear infinite alternate;
         }
 
-        @keyframes spikeUp {
+        .loader::before {
+            content: '';
+            box-sizing: border-box;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 64px;
+            height: 44px;
+            border-radius: 50%;
+            box-shadow: 0px 15px #FF3D00 inset;
+            top: 67px;
+        }
+
+        .loader::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 34px;
+            height: 34px;
+            top: 112%;
+            background: radial-gradient(ellipse at center, #ffdf00 8%, rgba(249, 62, 0, 0.6) 24%, rgba(0, 0, 0, 0) 100%);
+            border-radius: 50% 50% 0;
+            background-repeat: no-repeat;
+            background-position: -44px -44px;
+            background-size: 100px 100px;
+            box-shadow: 4px 4px 12px 0px rgba(255, 61, 0, 0.5);
+            box-sizing: border-box;
+            animation: animloader 1s linear infinite alternate;
+        }
+
+        @keyframes animloaderBack {
+
+            0%,
+            30%,
+            70% {
+                transform: translateY(0px);
+            }
+
+            20%,
+            40%,
+            100% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes animloader {
             0% {
-                background-size: 5px 40px
-            }
-
-            16% {
-                background-size: 5px 55px, 5px 40px, 5px 40px, 5px 40px, 5px 40px, 5px 40px
-            }
-
-            33% {
-                background-size: 5px 40px, 5px 55px, 5px 40px, 5px 40px, 5px 40px, 5px 40px
-            }
-
-            50% {
-                background-size: 5px 40px, 5px 40px, 5px 55px, 5px 40px, 5px 40px, 5px 40px
-            }
-
-            66% {
-                background-size: 5px 40px, 5px 40px, 5px 40px, 5px 55px, 5px 40px, 5px 40px
-            }
-
-            83% {
-                background-size: 5px 40px, 5px 40px, 5px 40px, 5px 40px, 5px 55px, 5px 40px
+                box-shadow: 4px 4px 12px 2px rgba(255, 61, 0, 0.75);
+                width: 34px;
+                height: 34px;
+                background-position: -44px -44px;
+                background-size: 100px 100px;
             }
 
             100% {
-                background-size: 5px 40px, 5px 40px, 5px 40px, 5px 40px, 5px 40px, 5px 55px
+                box-shadow: 2px 2px 8px 0px rgba(255, 61, 0, 0.5);
+                width: 30px;
+                height: 28px;
+                background-position: -36px -36px;
+                background-size: 80px 80px;
             }
         }
-*/
-.loader {
-    width: 32px;
-    height: 90px;
-    display: block;
-    margin: 20px auto;
-    position: relative;
-    border-radius: 50% 50% 0 0;
-    border-bottom: 10px solid #FF3D00;
-    background-color: #FFF;
-    background-image: radial-gradient(ellipse at center, #FFF 34%, #FF3D00 35%, #FF3D00 54%, #FFF 55%), linear-gradient(#FF3D00 10px, transparent 0);
-    background-size: 28px 28px;
-    background-position: center 20px , center 2px;
-    background-repeat: no-repeat;
-    box-sizing: border-box;
-    animation: animloaderBack 1s linear infinite alternate;
-  }
-  .loader::before {
-    content: '';  
-    box-sizing: border-box;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 64px;
-    height: 44px;
-    border-radius: 50%;
-    box-shadow: 0px 15px #FF3D00 inset;
-    top: 67px;
-  }
-  .loader::after {
-    content: '';  
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    width: 34px;
-    height: 34px;
-    top: 112%;
-    background: radial-gradient(ellipse at center, #ffdf00 8%, rgba(249, 62, 0, 0.6) 24%, rgba(0, 0, 0, 0) 100%);
-    border-radius: 50% 50% 0;
-    background-repeat: no-repeat;
-    background-position: -44px -44px;
-    background-size: 100px 100px;
-    box-shadow: 4px 4px 12px 0px rgba(255, 61, 0, 0.5);
-    box-sizing: border-box;
-    animation: animloader 1s linear infinite alternate;
-  }
-  
-  @keyframes animloaderBack {
-    0%, 30%, 70% {
-      transform: translateY(0px);
-    }
-    20%, 40%, 100% {
-      transform: translateY(-5px);
-    }
-  }
-  
-  @keyframes animloader {
-    0% {
-      box-shadow: 4px 4px 12px 2px rgba(255, 61, 0, 0.75);
-      width: 34px;
-      height: 34px;
-      background-position: -44px -44px;
-      background-size: 100px 100px;
-    }
-    100% {
-      box-shadow: 2px 2px 8px 0px rgba(255, 61, 0, 0.5);
-      width: 30px;
-      height: 28px;
-      background-position: -36px -36px;
-      background-size: 80px 80px;
-    }
-  }
+
         /*Spinner end*/
 
         div.line {
@@ -452,13 +430,15 @@
             justify-content: center;
         }
 
-        .res-title{
-           font-size: medium;
+        .res-title {
+            font-size: medium;
         }
+
         .actions>span {
             font-size: small;
             padding: 1%;
         }
+
         .res-body-sub-cntr {
             display: flex;
             justify-content: center;
@@ -482,7 +462,69 @@
 
         .hidden {
             /*display: none;*/
-            visibility: hidden;;
+            visibility: hidden;
+            ;
+        }
+
+        /* Toggle switch  - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(16px);
+            -ms-transform: translateX(16px);
+            transform: translateX(16px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
         }
     </style>
     <script>
@@ -495,15 +537,12 @@
         document.addEventListener("DOMContentLoaded", function () {
             loader = document.getElementById('loader');
             refreshData();
-
             //on button click refresh
             const refreshOrgBtn = document.getElementById('refresh-org');
             refreshOrgBtn?.addEventListener("click", () => {
                 refreshData();
             });
-
             //On Send Request
-
             const sendBtn = document.getElementById('send');
             sendBtn?.addEventListener("click", () => {
                 sendRequest();
@@ -538,14 +577,15 @@
                 const resbody = document.getElementById('resbody');
                 responseBody = JSON.stringify(message?.result?.body, null, '  ');
                 //resbody.innerHTML = message?.result?.body?`<pre>${JSON.stringify(message?.result?.body, null, '  ')}</pre>`: '';
-                resbody.innerHTML = formatResponse(message?.result?.body);
+                let formatCheckbox=document.getElementById('formatCheckbox')?.checked;
+                resbody.innerHTML = formatCheckbox?formatResponse(message?.result?.body):`<pre>${responseBody}</pre>`;
                 const resheader = document.getElementById('resheader');
-                resheader.innerHTML = message?.result?.headers?`<pre>${JSON.stringify(message?.result?.headers, null, '  ')}</pre>`:'';
+                resheader.innerHTML = message?.result?.headers ? `<pre>${JSON.stringify(message?.result?.headers, null, '  ')}</pre>` : '';
                 const stsCode = document.getElementById('status-code');
                 stsCode.textContent = message?.result?.status + ' ' + message?.result?.statusText || '--';
-                if (message?.result?.status>=200&&message?.result?.status<=299) {
+                if (message?.result?.status >= 200 && message?.result?.status <= 299) {
                     stsCode.style?.setProperty('background-color', 'green');
-                }else if(message?.result?.status>=100&&message?.result?.status<=199) {
+                } else if (message?.result?.status >= 100 && message?.result?.status <= 199) {
                     stsCode.style?.setProperty('background-color', '#0563d3');
                 }
                 else {
@@ -575,7 +615,7 @@
             let endpoint = instanceUrl + document.getElementById('url')?.value;
             let method = document.getElementById('httpMethod').value;
             let body = ''
-            if(!instanceUrl){
+            if (!instanceUrl) {
                 postError('Please select a default org for Callout');
                 loader.style.display = 'none';
                 return;
@@ -612,29 +652,29 @@
                 text: error
             })
         }
-        function copyResponse(){
+        function copyResponse() {
             navigator.clipboard.writeText(responseBody);
             vscode.postMessage({
                 command: 'message',
                 text: 'Salesforce Rest Explorer : Copied Response'
             })
         }
-        function formatResponse(body){
-            if(body){
-                let jsonBody=JSON.stringify(body,null,'  ');
-                while(jsonBody.match(/"\/services\/data[^"]*/)==null?false:jsonBody.match(/"\/services\/data[^"]*/)){
-                    let s=jsonBody.match(/"\/services\/data[^"]*/)[0];
-                    jsonBody=jsonBody.replace(s,`"<a href="#" title="click to add this as next endpoint" onclick="addEndPoint(this)">${s.replace('"','')}</a>`)
+        function formatResponse(body) {
+            if (body) {
+                let jsonBody = JSON.stringify(body, null, '  ');
+                while (jsonBody.match(/"\/services\/data[^"]*/) == null ? false : jsonBody.match(/"\/services\/data[^"]*/)) {
+                    let s = jsonBody.match(/"\/services\/data[^"]*/)[0];
+                    jsonBody = jsonBody.replace(s, `"<a href="#" title="click to add this as next endpoint" onclick="addEndPoint(this)">${s.replace('"', '')}</a>`)
                 }
                 return `<pre>${jsonBody}</pre>`;
-            }else{
+            } else {
                 return '';
             }
-            
+
         }
-        function addEndPoint(ele){
+        function addEndPoint(ele) {
             const urlEndpoint = document.getElementById('url');
-            urlEndpoint.value =ele?.innerText||'';
+            urlEndpoint.value = ele?.innerText || '';
             const responseSection = document.getElementById('response-section');
             responseSection?.classList.add("hidden");
         }

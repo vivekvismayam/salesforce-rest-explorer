@@ -30,7 +30,8 @@ function activate(context) {
 				{
 					// Enable scripts in the webview
 					enableScripts: true,
-					enableFindWidget:true
+					enableFindWidget:true,
+					retainContextWhenHidden: true
 				}
 			);
 			const pathToHtml = vscode.Uri.file(

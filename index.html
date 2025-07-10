@@ -15,6 +15,7 @@
     <div class="main-container">
         <div class="main-title">SALESFORCE REST EXPLORER</div>
         <div class="env-details">
+            <a href="https://vivekvismayam.github.io/posts/salesforce-rest-explorer-1" class="how-to-use">How to use?</a>
             <span>
                 <div style="text-align: end;"><button id="refresh-org" class="refresh-org"
                         title="Click if you want to hit Project default org">Set Default Org</button>
@@ -122,9 +123,11 @@
 
         .env-details {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
         }
-
+        .how-to-use{
+            color:#70ca5c;
+        }
         .env-details>span {
             padding: 0.5%;
             border: 0.5px solid var(--vscode-editorInfo-foreground, #4e94ce);

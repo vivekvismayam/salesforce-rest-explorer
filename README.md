@@ -2,6 +2,8 @@
 
 This extension provides a User Interface to perform REST API Callouts to Salesforce from SFDX Projects.
 
+>Details/Demo [here](https://vivekvismayam.github.io/posts/salesforce-rest-explorer-1/)
+
 ## Features
 
 - No need to manually authorize,or select base url. 
@@ -30,11 +32,14 @@ This extension provides a User Interface to perform REST API Callouts to Salesfo
 Please do report your issues in email vivekvismayam@hotmail.com.
 
 ## Contact Developer
-- Website : [https://vivekvismayam.github.io](https://vivekvismayam.github.io) 
+- Blog : [https://vivekvismayam.github.io](https://vivekvismayam.github.io) 
 - Email : [vivekvismayam@hotmail.com](mailto:vivekvismayam@hotmail.com)
 - LinkedIn : [https://www.linkedin.com/in/vivek-m-20b11675/](https://www.linkedin.com/in/vivek-m-20b11675/)
 
 ## Release Notes
 
-### 1.0.2 -Bug Fix
-- Bug fix done for SF Rest explorer to open even when the error apprears :::(node:2656) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead
+### 1.0.5 -Docuemntation updates
+- 
+### 1.0.4 -Featue update -Stable
+- Stable update
+- Retain Context When Hidden -Now you can switch to other tabs and come back to salesforce rest explorer and the extension UI retains the context.Also avoids relaods in this case and refreshing of Org selected.  
